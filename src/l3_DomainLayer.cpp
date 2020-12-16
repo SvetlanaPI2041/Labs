@@ -3,9 +3,10 @@
 using namespace std;
 
 
-bool Person::invariant() const
+bool Course::invariant() const
 {
-    return_cost
+    return_cost >= MIN_YEAR_OF_BIRTH
+        && _cost <= MAX_YEAR_OF_BIRTH
         && !_course_name.empty() && _course_name.size() <= MAX_NAME_LENGTH
         && !_duration.empty() && _duration.size() <= MAX_NAME_LENGTH;
         && !_computer_language.empty() && _computer_language.size() <= MAX_NAME_LENGTH;
@@ -23,21 +24,34 @@ const string & Course::getCourseName() const
     return _course_name;
 }
 
-const string & Person::getLastName() const
+const string & Course::getDuration() const
 {
-    return _last_name;
+    return _duration;
 }
 
-uint16_t Person::getYearOfBirth() const
+const string & Course::getComputerLanguage() const
 {
-    return _year_of_birth;
+    return _computer_language;
 }
 
-bool   Person::write(ostream& os)
+uint16_t Course::getCost() const
 {
-    writeString(os, _first_name);
-    writeString(os, _last_name);
-    writeNumber(os, _year_of_birth);
+    return _cost;
+}
+
+const string & Course::getComplexity() const
+{
+    return _complexity;
+}
+
+
+bool   Course::write(ostream& os)
+{
+    writeString(os, _course_name);
+    writeString(os, _duration);
+    writeString(os, _computer_language);
+    writeNumber(os, _cost);
+    writeString(os, _complexity);
 
     return os.good();
 }
@@ -46,9 +60,11 @@ bool   Person::write(ostream& os)
 
 shared_ptr<ICollectable> ItemCollector::read(istream& is)
 {
-    string   first_name = readString(is, MAX_NAME_LENGTH);
-    string   last_name  = readString(is, MAX_NAME_LENGTH);
-    uint16_t year       = readNumber<uint16_t>(is);
+    string   course_name = readString(is, MAX_NAME_LENGTH);
+    string   duration  = readString(is, MAX_NAME_LENGTH);
+    string   computer_language  = readString(is, MAX_NAME_LENGTH);
+    uint16_t cost       = readNumber<uint16_t>(is);
+    string   complexity   = readString(is, MAX_NAME_LENGTH);
 
-    return std::make_shared<Person>(first_name, last_name, year);
+    return std::make_shared<Course>(course_name, duration, computer_language, cost, complexity);
 }
